@@ -38,7 +38,6 @@ def bersihkan_teks(teks):
     return teks
 
 def deteksi_kata_kasar(teks):
-    # Variasi kata kasar (slang/typo)
     kasar = [
         'anjing', 'anjink', 'anjir', 'anjirr', 'anjrit', 'anying', 'anyink', 'anyingg',
         'goblok', 'goblog', 'gobloq', 'tolol', 'tololl', 'tolet',
@@ -53,29 +52,24 @@ def deteksi_kata_kasar(teks):
         'asu', 'asuu', 'asuuu'
     ]
 
-    # Frasa kasar / hinaan umum
     frasa_kasar = [
         'gak jelas', 'gajelas', 'gak mutu', 'film apaan', 'jelek banget',
         'nggak banget', 'bikin nyesel', 'gak layak', 'busuk banget', 'film sampah'
     ]
 
-    # Sensor / variasi simbol (regex)
     sensor_patterns = [
-        r'a[\W_]*n[\W_]*j[\W_]*i[\W_]*n[\W_]*g',   # a**j*ing
-        r'b[\W_]*a[\W_]*n[\W_]*g[\W_]*s[\W_]*a[\W_]*t', # b@ngs4t
-        r't[\W_]*a[\W_]*i',                        # t@i
-        r'k[\W_]*o[\W_]*n[\W_]*t[\W_]*o[\W_]*l'    # k0nt0l
+        r'a[\W_]*n[\W_]*j[\W_]*i[\W_]*n[\W_]*g',
+        r'b[\W_]*a[\W_]*n[\W_]*g[\W_]*s[\W_]*a[\W_]*t',
+        r't[\W_]*a[\W_]*i',
+        r'k[\W_]*o[\W_]*n[\W_]*t[\W_]*o[\W_]*l'
     ]
 
     teks_lower = teks.lower()
 
-    # Cek kata kasar
     if any(kata in teks_lower for kata in kasar):
         return True
-    # Cek frasa kasar
     if any(frasa in teks_lower for frasa in frasa_kasar):
         return True
-    # Cek regex simbol
     for pattern in sensor_patterns:
         if re.search(pattern, teks_lower):
             return True
@@ -112,9 +106,6 @@ st.set_page_config(page_title="Sentimen Film", layout="wide")
 # Sidebar navigasi
 st.sidebar.title("🔍 Navigasi")
 page = st.sidebar.selectbox("📂 Pilih Halaman:", ["🎯 Prediksi", "📊 Dashboard"])
-
-# Optional filter untuk komentar kasar
-filter_kasar = st.sidebar.checkbox("Tampilkan komentar yang mengandung kata kasar", value=False)
 
 data = load_data()
 model = train_model(data) if data is not None else None
@@ -192,14 +183,6 @@ elif page == "📊 Dashboard":
         neg_end = neg_start + 5
         st.dataframe(data_negative.iloc[neg_start:neg_end])
         st.caption(f"Menampilkan {neg_start+1}-{min(neg_end, neg_total)} dari {neg_total} komentar negatif.")
-
-        # Komentar Kasar
-        if filter_kasar:
-            st.subheader("⚠️ Komentar Mengandung Kata Kasar")
-            data['kasar'] = data['text_tweet'].apply(deteksi_kata_kasar)
-            data_kasar = data[data['kasar'] == True]
-            st.dataframe(data_kasar[['text_tweet', 'sentiment']])
-            st.caption(f"Menampilkan {len(data_kasar)} komentar yang terdeteksi kasar.")
 
     else:
         st.error("Dataset tidak tersedia.")
