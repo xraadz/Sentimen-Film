@@ -49,7 +49,22 @@ def deteksi_kata_kasar(teks):
         'brengsek', 'brngsek', 'brengsk',
         'bajingan', 'bajingaan',
         'titit', 'titid', 't*tit', 'titittt', 'ttit',
-        'asu', 'asuu', 'asuuu'
+        'asu', 'asuu', 'asuuu',
+        'bego', 'bgo', 'bg', 'bgud', 'bgd',
+        'kampret', 'kmpret', 'kamp*et', 'k@mpret',
+        'bangke', 'bngke', 'b4ngke', 'b4ngk',
+        'sialan', 'slan', 's@lan', 's1alan',
+        'bajing4n', 'baj1ngan', 'b4jingan',
+        'br3ngsek', 'brengsk', 'br@ngsek',
+        'babi', 'b4bi', 'b@bi', 'babii',
+        'jancuk', 'jancok', 'jancoek', 'j4ncuk', 'j@nck', 'j@ncoek',
+        'cuk', 'cukkk', 'cukk', 'cok', 'cokkk', 'cukimay',
+        'ndasmu', 'ndas lo', 'ndas koe', 'ndas kowe',
+        'matamu', 'matalo', 'matakoe', 'm4tamu',
+        'asu tenan', 'anjrit', 'anjay', 'bangsaaat', 'gblk', 'gblk banget',
+        'memek', 'memekmu', 'm3m3k', 'm3mek', 'm3m3kmuu',
+        'pepek', 'p3p3k', 'p3pek', 'p**ek', 'p#pek',
+        'brengs*k', 'bangs*t', 'sinting', 'edan'
     ]
 
     frasa_kasar = [
