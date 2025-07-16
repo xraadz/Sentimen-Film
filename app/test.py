@@ -40,8 +40,19 @@ def bersihkan_teks(teks):
 def deteksi_kata_kasar(teks):
     kasar = [
         'anjing', 'goblok', 'bangsat', 'tai', 'kontol', 'tolol', 'jelek',
-        'gajelas', 'sampah', 'nyesel', 'busuk', 'parah', 'bodoh', 'brengsek', 'anyink', 'anyinkkk', 'titit', 'titid', 'asu',
-        'bgst', 'bajingan'
+        'gajelas', 'sampah', 'nyesel', 'busuk', 'parah', 'bodoh', 'brengsek',
+        'anyink', 'anyinkkk', 'titit', 'titid', 'asu', 'bgst', 'bajingan',
+        'anjing', 'anjink', 'anjir', 'anjirr', 'anjrit', 'anying', 'anyink', 'anyingg',
+        'goblok', 'goblog', 'gobloq', 'tolol', 'tololl', 'tolet',
+        'bodoh', 'bodo', 'bodoo', 'bodooh', 'bdoh',
+        'kontol', 'kontl', 'kontool', 'kontoll',
+        'tai', 'tae', 'tay', 'taik', 'taekk',
+        'bangsat', 'bgsat', 'bgst', 'bangke',
+        'sampah', 'smph', 'samph',
+        'brengsek', 'brngsek', 'brengsk',
+        'bajingan', 'bajingaan',
+        'titit', 'titid', 'titittt', 'ttit',
+        'asu', 'asuu', 'asuuu'
     ]
     return any(kata in teks.lower() for kata in kasar)
 
