@@ -38,10 +38,8 @@ def bersihkan_teks(teks):
     return teks
 
 def deteksi_kata_kasar(teks):
+    # Variasi kata kasar (slang/typo)
     kasar = [
-        'anjing', 'goblok', 'bangsat', 'tai', 'kontol', 'tolol', 'jelek',
-        'gajelas', 'sampah', 'nyesel', 'busuk', 'parah', 'bodoh', 'brengsek',
-        'anyink', 'anyinkkk', 'titit', 'titid', 'asu', 'bgst', 'bajingan',
         'anjing', 'anjink', 'anjir', 'anjirr', 'anjrit', 'anying', 'anyink', 'anyingg',
         'goblok', 'goblog', 'gobloq', 'tolol', 'tololl', 'tolet',
         'bodoh', 'bodo', 'bodoo', 'bodooh', 'bdoh',
@@ -51,12 +49,11 @@ def deteksi_kata_kasar(teks):
         'sampah', 'smph', 'samph',
         'brengsek', 'brngsek', 'brengsk',
         'bajingan', 'bajingaan',
-        'titit', 'titid', 'titittt', 'ttit',
+        'titit', 'titid', 't*tit', 'titittt', 'ttit',
         'asu', 'asuu', 'asuuu'
     ]
-    return any(kata in teks.lower() for kata in kasar)
 
-# Frasa kasar / hinaan umum
+    # Frasa kasar / hinaan umum
     frasa_kasar = [
         'gak jelas', 'gajelas', 'gak mutu', 'film apaan', 'jelek banget',
         'nggak banget', 'bikin nyesel', 'gak layak', 'busuk banget', 'film sampah'
@@ -116,6 +113,9 @@ st.set_page_config(page_title="Sentimen Film", layout="wide")
 st.sidebar.title("🔍 Navigasi")
 page = st.sidebar.selectbox("📂 Pilih Halaman:", ["🎯 Prediksi", "📊 Dashboard"])
 
+# Optional filter untuk komentar kasar
+filter_kasar = st.sidebar.checkbox("Tampilkan komentar yang mengandung kata kasar", value=False)
+
 data = load_data()
 model = train_model(data) if data is not None else None
 
@@ -173,12 +173,9 @@ elif page == "📊 Dashboard":
         ax2.set_title("Distribusi Sentimen")
         st.pyplot(fig2)
 
-        # ========================
         # Komentar Positif
-        # ========================
         st.subheader("🟢 Komentar Positif")
         data_positive = data[data['sentiment'] == 'positive'].reset_index(drop=True)
-
         pos_total = len(data_positive)
         pos_page = st.number_input("Halaman Positif:", min_value=1, max_value=(pos_total - 1) // 5 + 1, value=1, step=1)
         pos_start = (pos_page - 1) * 5
@@ -186,18 +183,23 @@ elif page == "📊 Dashboard":
         st.dataframe(data_positive.iloc[pos_start:pos_end])
         st.caption(f"Menampilkan {pos_start+1}-{min(pos_end, pos_total)} dari {pos_total} komentar positif.")
 
-        # ========================
         # Komentar Negatif
-        # ========================
         st.subheader("🔴 Komentar Negatif")
         data_negative = data[data['sentiment'] == 'negative'].reset_index(drop=True)
-
         neg_total = len(data_negative)
         neg_page = st.number_input("Halaman Negatif:", min_value=1, max_value=(neg_total - 1) // 5 + 1, value=1, step=1)
         neg_start = (neg_page - 1) * 5
         neg_end = neg_start + 5
         st.dataframe(data_negative.iloc[neg_start:neg_end])
         st.caption(f"Menampilkan {neg_start+1}-{min(neg_end, neg_total)} dari {neg_total} komentar negatif.")
+
+        # Komentar Kasar
+        if filter_kasar:
+            st.subheader("⚠️ Komentar Mengandung Kata Kasar")
+            data['kasar'] = data['text_tweet'].apply(deteksi_kata_kasar)
+            data_kasar = data[data['kasar'] == True]
+            st.dataframe(data_kasar[['text_tweet', 'sentiment']])
+            st.caption(f"Menampilkan {len(data_kasar)} komentar yang terdeteksi kasar.")
 
     else:
         st.error("Dataset tidak tersedia.")
