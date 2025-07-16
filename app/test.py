@@ -56,6 +56,35 @@ def deteksi_kata_kasar(teks):
     ]
     return any(kata in teks.lower() for kata in kasar)
 
+# Frasa kasar / hinaan umum
+    frasa_kasar = [
+        'gak jelas', 'gajelas', 'gak mutu', 'film apaan', 'jelek banget',
+        'nggak banget', 'bikin nyesel', 'gak layak', 'busuk banget', 'film sampah'
+    ]
+
+    # Sensor / variasi simbol (regex)
+    sensor_patterns = [
+        r'a[\W_]*n[\W_]*j[\W_]*i[\W_]*n[\W_]*g',   # a**j*ing
+        r'b[\W_]*a[\W_]*n[\W_]*g[\W_]*s[\W_]*a[\W_]*t', # b@ngs4t
+        r't[\W_]*a[\W_]*i',                        # t@i
+        r'k[\W_]*o[\W_]*n[\W_]*t[\W_]*o[\W_]*l'    # k0nt0l
+    ]
+
+    teks_lower = teks.lower()
+
+    # Cek kata kasar
+    if any(kata in teks_lower for kata in kasar):
+        return True
+    # Cek frasa kasar
+    if any(frasa in teks_lower for frasa in frasa_kasar):
+        return True
+    # Cek regex simbol
+    for pattern in sensor_patterns:
+        if re.search(pattern, teks_lower):
+            return True
+
+    return False
+
 @st.cache_data
 def load_data():
     try:
